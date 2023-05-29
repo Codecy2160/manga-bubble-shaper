@@ -1,8 +1,11 @@
-/*
+﻿/*
  * Decompiled with Jsxer
  * Version: 1.4.0
  * JSXBIN 2.0
  */
+
+#target photoshop;
+
 function charCount(str) {
     if(str === undefined) return;
     var raw = str.replace(/[^\w\s\u2026]/gmi, "").replace(/(?<!\W)i(?<!\W)/gmi, "");
@@ -15,12 +18,16 @@ function charCount(str) {
 function shaper(array) {
     var split = array;
     var totalLen = 0;
+    var extreme = 0;
+    for(var i = 0; i < split.length; i++) if(split[i].length > extreme) extreme = split[i].length;
     for(var i = 0; i < split.length; i += 1) totalLen += split[i].length;
     var mean = totalLen / wordCount;
     var median = (split.length % 2) === 0 ? 0 : Math.floor(split.length / 2);
     var next = median > 0 ? median + 1 : split.length / 2;
     var prev = median > 0 ? median - 1 : (split.length / 2) - 1;
     var singleMedian = (wordCount % 2) === 1 ? true : false;
+    var bounds = layer.height;
+    var breakCount = 0;
     if(layer.kind === TextType.POINTTEXT) {
         var lines = layer.contents.split("\r");
         if(lines.length > 1) {
@@ -33,24 +40,40 @@ function shaper(array) {
                 }
             }
         }
-    } else {
+        else {
+            var ext = (Math.pow(mean, 2) * Math.asin(wordCount / totalLen) * 2) + 1;
+            var reme = (Math.sqrt(mean) / Math.sqrt(totalLen)) * 3.14;
+            extreme = Math.round(ext + reme);
+        }
+    } 
+    else {
         if(layer.kind === TextType.PARAGRAPHTEXT) {
             activeDocument.activeLayer.name = "Kenzoku";
             var state = activeDocument.historyStates.length - 1;
-            var parBreaks = layer.contents.indexOf("\r") !== -1 ? layer.contents.match(/[\r]/gmi).length : 0;
-            layer.contents = "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO";
-            for(var i = 0; i <= parBreaks.length; i += 1) layer.contents += "\r O";
             layer.kind = TextType.POINTTEXT;
-            var lines = layer.contents.split("\r");
-            extreme = lines[0].length - 1;
+            breakCount = layer.content.split("\r").length;
             try {
                 activeDocument.activeHistoryState = activeDocument.historyStates[state];
-            } catch (error) {
+                var parBreaks = layer.contents.indexOf("\r") !== -1 ? layer.contents.match(/[\r]/gmi).length : 0;
+                layer.contents = "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO";
+                for(var i = 0; i <= parBreaks.length; i += 1) layer.contents += "\r O";
+                layer.kind = TextType.POINTTEXT;
+                var lines = layer.contents.split("\r");
+                extreme = lines[0].length - 1;
+                try {
+                    activeDocument.activeHistoryState = activeDocument.historyStates[state];
+
+                } 
+                catch (error) {
+                    alert("Failed to fallback prior history state!\nCheck for missing edits within the past 5 minutes.");
+                }
+                layer.kind = TextType.PARAGRAPHTEXT;
+            } 
+            catch (error) {
                 alert("Failed to fallback prior history state!\nCheck for missing edits within the past 5 minutes.");
             }
-            layer.kind = TextType.PARAGRAPHTEXT;
         }
-    }
+    } $.writeln("Max Line Length: ", extreme);
     if((singleMedian) && (split[median] !== undefined)) {
         while(true) {
             if((charCount(split[prev]) + charCount(split[median]) + charCount(split[next])) <= extreme) {
@@ -322,7 +345,15 @@ function shaper(array) {
             }
         }
     }
-    return split.join("\r").split("\r \r").join("\r");
+    if(layer.kind === TextType.PARAGRAPHTEXT) {
+        if(split.length - 1 === breakCount) layer.height = bounds;
+        else {
+            var lineHeight = bounds / (breakCount + 1);
+            var newBounds = lineHeight * split.length;
+            layer.height = newBounds;
+        }
+    }
+    $.writeln("Input:\n", split.join(''), "\n\nMax Line Length: ", extreme, "\n\nOutput:\n", split.join("\r").split("\r \r").join("\r"));
 }
 String.prototype.endsWith = (function(str) {
     return this.substring(this.length - str.length, this.length) === str;
@@ -334,21 +365,6 @@ var layer = app.activeDocument.activeLayer.textItem;
 var text = layer.contents.replace(/[^\S\n\r]+$/gmi, " ");
 var toArray = text.split(/\s/);
 var wordCount = toArray.length;
-// var username = $.getenv("USERNAME");
-// var compname = $.getenv("COMPUTERNAME");
-// var procarch = $.getenv("PROCESSOR_ARCHITECTURE");
-// var prociden = $.getenv("PROCESSOR_IDENTIFIER");
-// var procrevi = $.getenv("PROCESSOR_REVISION");
-// var opersyst = $.getenv("OS");
-// var temploca = $.getenv("TEMP");
-// if(((((((username === "MS") && (compname === "PC")) && (procarch === "AMD64")) && (procrevi === "44501")) && (prociden === "Intel64 Family 6 Model 69 Stepping 1, GenuineIntel")) && (opersyst === "Windows_NT")) && (temploca === "C:\\Users\\MS\\AppData\\Local\\Temp")) {
-//     layer.contents = shaper(toArray);
-//     if(layer.kind === TextType.POINTTEXT) {
-//         text = layer.contents.replace(/[^\S\n\r]+$/gmi, " ");
-//         toArray = text.split(/\s/);
-//         layer.contents = shaper(toArray);
-//     }
-// } else {
-//     alert("UNAUTHORIZED ACCESS");
-// }
-layer.contents = shaper(toArray);
+// layer.contents = shaper(toArray);
+$.writeln(text, " ", toArray);
+shaper(toArray);
