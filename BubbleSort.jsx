@@ -87,7 +87,8 @@ function shaper(array) {
                         if((charCount(splitCopy[mockNext]) + charCount(splitCopy[mockNext + 1])) <= charCount(comparator)) {
                             splitCopy[mockNext] += " " + splitCopy[mockNext + 1];
                             splitCopy.splice(mockNext + 1, 1);
-                        } else {
+                        } 
+                        else {
                             nextLine = splitCopy[mockNext];
                             break;
                         }
@@ -113,7 +114,8 @@ function shaper(array) {
                             mockMedian--;
                             mockPrev--;
                             mockNext--;
-                        } else {
+                        } 
+                        else {
                             nextLine = splitCopy[mockPrev];
                             break;
                         }
@@ -147,7 +149,8 @@ function shaper(array) {
                             mockMedian--;
                             mockPrev--;
                             mockNext--;
-                        } else {
+                        } 
+                        else {
                             nextLine = splitCopy[mockPrev];
                             break;
                         }
@@ -174,7 +177,8 @@ function shaper(array) {
                         if((charCount(splitCopy[mockNext]) + charCount(splitCopy[mockNext + 1])) <= charCount(comparator)) {
                             splitCopy[mockNext] += " " + splitCopy[mockNext + 1];
                             splitCopy.splice(mockNext + 1, 1);
-                        } else {
+                        } 
+                        else {
                             nextLine = splitCopy[mockNext];
                             break;
                         }
@@ -203,7 +207,8 @@ function shaper(array) {
                             mockMedian--;
                             mockPrev--;
                             mockNext--;
-                        } else {
+                        } 
+                        else {
                             nextLine = splitCopy[mockPrev];
                             break;
                         }
@@ -241,7 +246,8 @@ function shaper(array) {
                         if((charCount(splitCopy[mockNext + i + 1]) + charCount(splitCopy[mockNext + i + 2])) <= charCount(comparator)) {
                             splitCopy[mockNext + i + 1] += " " + splitCopy[mockNext + i + 2];
                             splitCopy.splice(mockNext + i + 2, 1);
-                        } else {
+                        } 
+                        else {
                             nextLine = splitCopy[mockNext + i + 1];
                             break;
                         }
@@ -276,7 +282,8 @@ function shaper(array) {
                             splitCopy[(mockPrev - i) - 2] += " " + splitCopy[(mockPrev - i) - 1];
                             splitCopy.splice((mockPrev - i) - 1, 1);
                             mockPrev--;
-                        } else {
+                        } 
+                        else {
                             nextLine = splitCopy[(mockPrev - i) - 2];
                             break;
                         }
