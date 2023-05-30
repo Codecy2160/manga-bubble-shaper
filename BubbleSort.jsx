@@ -219,9 +219,8 @@ function shaper(array) {
                 median--;
                 prev--;
                 next--;
-            } else {
-                break;
-            }
+            } 
+            else break;
         }
     }
     var nextCycles = split.length - next;
@@ -353,7 +352,7 @@ function shaper(array) {
             layer.height = newBounds;
         }
     }
-    $.writeln("Input:\n", split.join(''), "\n\nMax Line Length: ", extreme, "\n\nOutput:\n", split.join("\r").split("\r \r").join("\r"));
+    return split.join('\r');
 }
 String.prototype.endsWith = (function(str) {
     return this.substring(this.length - str.length, this.length) === str;
@@ -361,10 +360,11 @@ String.prototype.endsWith = (function(str) {
 String.prototype.startsWith = (function(str) {
     return this.substring(0, this.length) === str;
 });
+app.preferences.rulerUnits = Units.PIXEL;
 var layer = app.activeDocument.activeLayer.textItem;
 var text = layer.contents.replace(/[^\S\n\r]+$/gmi, " ");
 var toArray = text.split(/\s/);
 var wordCount = toArray.length;
-// layer.contents = shaper(toArray);
-$.writeln(text, " ", toArray);
-shaper(toArray);
+layer.contents = shaper(toArray);
+// $.writeln(text, " ", toArray);
+// shaper(toArray);
