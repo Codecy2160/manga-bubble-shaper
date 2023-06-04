@@ -80,7 +80,7 @@ function shaper(array) {
                 var nextLine = "";
                 var splitCopy = [];
                 for(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);
-                var comparator = split[next] + " " + split[next + 1];
+                var comparator = split[next] + or(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);or(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);" " + split[next + 1];
                 if((next + 1) <= (splitCopy.length - 1)) {
                     while(true) {
                         var mockNext = next;
