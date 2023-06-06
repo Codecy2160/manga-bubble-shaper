@@ -1,10 +1,4 @@
-﻿/*
- * Decompiled with Jsxer
- * Version: 1.4.0
- * JSXBIN 2.0
- */
-
-#target photoshop;
+﻿#target photoshop;
 
 function charCount(str) {
     if(str === undefined) return;
@@ -26,8 +20,8 @@ function shaper(array) {
     var next = median > 0 ? median + 1 : split.length / 2;
     var prev = median > 0 ? median - 1 : (split.length / 2) - 1;
     var singleMedian = (wordCount % 2) === 1 ? true : false;
-    var bounds = layer.height;
-    var breakCount = 0;
+    var bounds = 0;
+    var breakCount = 0; $.writeln(median, split[median]);
     if(layer.kind === TextType.POINTTEXT) {
         var lines = layer.contents.split("\r");
         if(lines.length > 1) {
@@ -48,10 +42,11 @@ function shaper(array) {
     } 
     else {
         if(layer.kind === TextType.PARAGRAPHTEXT) {
-            activeDocument.activeLayer.name = "Kenzoku";
+            bounds = layer.height;
             var state = activeDocument.historyStates.length - 1;
+            activeDocument.activeLayer.name = "Kenzoku";
             layer.kind = TextType.POINTTEXT;
-            breakCount = layer.content.split("\r").length;
+            breakCount = layer.contents.split("\r").length;
             try {
                 activeDocument.activeHistoryState = activeDocument.historyStates[state];
                 var parBreaks = layer.contents.indexOf("\r") !== -1 ? layer.contents.match(/[\r]/gmi).length : 0;
@@ -80,7 +75,7 @@ function shaper(array) {
                 var nextLine = "";
                 var splitCopy = [];
                 for(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);
-                var comparator = split[next] + or(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);or(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);" " + split[next + 1];
+                var comparator = split[next] + " " + split[next + 1];
                 if((next + 1) <= (splitCopy.length - 1)) {
                     while(true) {
                         var mockNext = next;
@@ -260,7 +255,8 @@ function shaper(array) {
                 }
                 split[next + i] += " " + split[next + i + 1];
                 split.splice(next + i + 1, 1);
-            } else break;
+            } 
+            else break;
         }
     }
     var prevCycles = split.length - prev;
@@ -299,7 +295,8 @@ function shaper(array) {
                 median--;
                 prev--;
                 next--;
-            } else break;
+            } 
+            else break;
         }
     }
     var lineCount = split.length;
@@ -340,7 +337,8 @@ function shaper(array) {
                     }
                 }
             }
-        } catch (error) {
+        } 
+        catch (error) {
             continue;
         }
     }
@@ -367,11 +365,9 @@ String.prototype.endsWith = (function(str) {
 String.prototype.startsWith = (function(str) {
     return this.substring(0, this.length) === str;
 });
-app.preferences.rulerUnits = Units.PIXEL;
+app.preferences.rulerUnits = Units.PIXELS;
 var layer = app.activeDocument.activeLayer.textItem;
 var text = layer.contents.replace(/[^\S\n\r]+$/gmi, " ");
 var toArray = text.split(/\s/);
 var wordCount = toArray.length;
 layer.contents = shaper(toArray);
-// $.writeln(text, " ", toArray);
-// shaper(toArray);
