@@ -21,7 +21,7 @@ function shaper(array) {
     var prev = median > 0 ? median - 1 : (split.length / 2) - 1;
     var singleMedian = (wordCount % 2) === 1 ? true : false;
     var bounds = 0;
-    var breakCount = 0; $.writeln(median, split[median]);
+    var originalLineCount = 0; $.writeln(median, split[median]);
     if(layer.kind === TextType.POINTTEXT) {
         var lines = layer.contents.split("\r");
         if(lines.length > 1) {
@@ -46,7 +46,7 @@ function shaper(array) {
             var state = activeDocument.historyStates.length - 1;
             activeDocument.activeLayer.name = "Kenzoku";
             layer.kind = TextType.POINTTEXT;
-            breakCount = layer.contents.split("\r").length;
+            originalLineCount = layer.contents.split("\r").length;
             try {
                 activeDocument.activeHistoryState = activeDocument.historyStates[state];
                 var parBreaks = layer.contents.indexOf("\r") !== -1 ? layer.contents.match(/[\r]/gmi).length : 0;
@@ -248,9 +248,29 @@ function shaper(array) {
                         }
                     }
                 }
-                if((nextLine !== "") && (charCount(split[prev - i]) > (extreme * 0.25))) {
+                if((nextLine !== "") && (charCount(split[next + 1]) > (extreme * 0.25))) {
                     if(((2.75 < (charCount(comparator) / charCount(nextLine))) || ((charCount(comparator) / charCount(nextLine)) < 0.75)) || (charCount(nextLine) <= (charCount(split[prev - i]) + 2))) {
                         break;
+                    }
+                }
+                else if(charCount(nextLine) <= 1) break;
+                else if(charCount(nextLine) < charCount(comparator) * 0.5) {
+                    var nextLineNext = '';
+                    while(true) {
+                        var mockNext = next;
+                        if((charCount(splitCopy[mockNext + i + 2]) + charCount(splitCopy[mockNext + i + 3])) <= charCount(nextLine)) {
+                            splitCopy[mockNext + i + 2] += " " + splitCopy[mockNext + i + 3];
+                            splitCopy.splice(mockNext + i + 3, 2);
+                        } 
+                        else {
+                            nextLineNext = splitCopy[mockNext + i + 2];
+                            break;
+                        }
+                    }
+                    if(charCount(nextLine) < charCount(nextLineNext) * 0.5) {
+                        extreme += nextLine.length;
+                        i--;
+                        continue;
                     }
                 }
                 split[next + i] += " " + split[next + i + 1];
@@ -288,6 +308,26 @@ function shaper(array) {
                 if((nextLine !== "") && (charCount(split[prev - i]) > (extreme * 0.25))) {
                     if(((2.75 < (charCount(comparator) / charCount(nextLine))) || ((charCount(comparator) / charCount(nextLine)) < 0.75)) || (charCount(nextLine) <= (charCount(split[prev - i]) + 2))) {
                         break;
+                    }
+                }
+                else if(charCount(nextLine) <= 1) break;
+                else if(charCount(nextLine) < charCount(comparator) * 0.5) {
+                    var nextLineNext = '';
+                    while(true) {
+                        var mockNext = next;
+                        if((charCount(splitCopy[(mockPrev - i) - 2]) + charCount(splitCopy[(mockPrev - i) - 3])) <= charCount(nextLine)) {
+                            splitCopy[(mockPrev - i) - 2] += " " + splitCopy[(mockPrev - i) - 3];
+                            splitCopy.splice((mockPrev - i) - 3, 2);
+                        } 
+                        else {
+                            nextLineNext = splitCopy[(mockPrev - i) - 2];
+                            break;
+                        }
+                    }
+                    if(charCount(nextLine) < charCount(nextLineNext) * 0.5) {
+                        extreme += nextLine.length;
+                        i--;
+                        continue;
                     }
                 }
                 split[(prev - i) - 1] += " " + split[prev - i];
@@ -329,7 +369,8 @@ function shaper(array) {
                     prev--;
                     next--;
                     lineCount--;
-                } else {
+                } 
+                else {
                     if(((charCount(split[i]) + charCount(split[j])) <= (charCount(split[x]) + 2)) && ((charCount(split[y]) + charCount(split[x])) <= extreme)) {
                         split[i] += " " + split[j];
                         split.splice(j, 1);
@@ -350,10 +391,14 @@ function shaper(array) {
         }
     }
     if(layer.kind === TextType.PARAGRAPHTEXT) {
-        if(split.length - 1 === breakCount) layer.height = bounds;
+        $.writeln(split.length === originalLineCount);
+        $.writeln(bounds);
+        $.writeln(originalLineCount);
+        $.writeln(split.length);
+        if(split.length === originalLineCount) layer.height = bounds;
         else {
-            var lineHeight = bounds / (breakCount + 1);
-            var newBounds = lineHeight * split.length;
+            var lineHeight = bounds / originalLineCount; $.writeln(lineHeight);
+            var newBounds = lineHeight * (split.length + 2); $.writeln(newBounds);
             layer.height = newBounds;
         }
     }
