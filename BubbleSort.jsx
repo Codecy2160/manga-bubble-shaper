@@ -42,13 +42,18 @@ function shaper(array) {
     } 
     else {
         if(layer.kind === TextType.PARAGRAPHTEXT) {
+            var hisStates = activeDocument.historyStates;
+            if(hisStates.length - 1 != hisStates.indexOf(activeDocument.activeHistoryState)) {
+                activeDocument.selection.selectAll();
+                activeDocument.selection.deselect();
+            }
             bounds = layer.height;
-            var state = activeDocument.historyStates.length - 1;
+            var state = hisStates.length - 1;
             activeDocument.activeLayer.name = "Kenzoku";
             layer.kind = TextType.POINTTEXT;
             originalLineCount = layer.contents.split("\r").length;
             try {
-                activeDocument.activeHistoryState = activeDocument.historyStates[state];
+                activeDocument.activeHistoryState = hisStates[state];
                 var parBreaks = layer.contents.indexOf("\r") !== -1 ? layer.contents.match(/[\r]/gmi).length : 0;
                 layer.contents = "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO";
                 for(var i = 0; i <= parBreaks.length; i += 1) layer.contents += "\r O";
@@ -56,7 +61,7 @@ function shaper(array) {
                 var lines = layer.contents.split("\r");
                 extreme = lines[0].length - 1;
                 try {
-                    activeDocument.activeHistoryState = activeDocument.historyStates[state];
+                    activeDocument.activeHistoryState = hisStates[state];
 
                 } 
                 catch (error) {
