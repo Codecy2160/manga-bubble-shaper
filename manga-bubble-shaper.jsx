@@ -21,7 +21,7 @@ function shaper(array) {
     var prev = median > 0 ? median - 1 : (split.length / 2) - 1;
     var singleMedian = (wordCount % 2) === 1 ? true : false;
     var bounds = 0;
-    var originalLineCount = 0; $.writeln(median, split[median]);
+    var originalLineCount = 0; 
     if(layer.kind === TextType.POINTTEXT) {
         var lines = layer.contents.split("\r");
         if(lines.length > 1) {
@@ -42,18 +42,13 @@ function shaper(array) {
     } 
     else {
         if(layer.kind === TextType.PARAGRAPHTEXT) {
-            var hisStates = activeDocument.historyStates;
-            if(hisStates.length - 1 != hisStates.indexOf(activeDocument.activeHistoryState)) {
-                activeDocument.selection.selectAll();
-                activeDocument.selection.deselect();
-            }
             bounds = layer.height;
-            var state = hisStates.length - 1;
+            var state = activeDocument.historyStates.length - 1;
             activeDocument.activeLayer.name = "Kenzoku";
             layer.kind = TextType.POINTTEXT;
             originalLineCount = layer.contents.split("\r").length;
             try {
-                activeDocument.activeHistoryState = hisStates[state];
+                activeDocument.activeHistoryState = activeDocument.historyStates[state];
                 var parBreaks = layer.contents.indexOf("\r") !== -1 ? layer.contents.match(/[\r]/gmi).length : 0;
                 layer.contents = "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO";
                 for(var i = 0; i <= parBreaks.length; i += 1) layer.contents += "\r O";
@@ -61,7 +56,7 @@ function shaper(array) {
                 var lines = layer.contents.split("\r");
                 extreme = lines[0].length - 1;
                 try {
-                    activeDocument.activeHistoryState = hisStates[state];
+                    activeDocument.activeHistoryState = activeDocument.historyStates[state];
 
                 } 
                 catch (error) {
@@ -73,7 +68,7 @@ function shaper(array) {
                 alert("Failed to fallback prior history state!\nCheck for missing edits within the past 5 minutes.");
             }
         }
-    } $.writeln("Max Line Length: ", extreme);
+    }
     if((singleMedian) && (split[median] !== undefined)) {
         while(true) {
             if((charCount(split[prev]) + charCount(split[median]) + charCount(split[next])) <= extreme) {
@@ -253,6 +248,7 @@ function shaper(array) {
                         }
                     }
                 }
+                else if(next + i + 2 > split.length) nextLine = splitCopy[next + i + 1];
                 if((nextLine !== "") && (charCount(split[next + 1]) > (extreme * 0.25))) {
                     if(((2.75 < (charCount(comparator) / charCount(nextLine))) || ((charCount(comparator) / charCount(nextLine)) < 0.75)) || (charCount(nextLine) <= (charCount(split[prev - i]) + 2))) {
                         break;
@@ -310,6 +306,7 @@ function shaper(array) {
                         }
                     }
                 }
+                else if(next + i + 2 > split.length) nextLine = splitCopy[next + i + 1];
                 if((nextLine !== "") && (charCount(split[prev - i]) > (extreme * 0.25))) {
                     if(((2.75 < (charCount(comparator) / charCount(nextLine))) || ((charCount(comparator) / charCount(nextLine)) < 0.75)) || (charCount(nextLine) <= (charCount(split[prev - i]) + 2))) {
                         break;
@@ -396,14 +393,10 @@ function shaper(array) {
         }
     }
     if(layer.kind === TextType.PARAGRAPHTEXT) {
-        $.writeln(split.length === originalLineCount);
-        $.writeln(bounds);
-        $.writeln(originalLineCount);
-        $.writeln(split.length);
         if(split.length === originalLineCount) layer.height = bounds;
         else {
-            var lineHeight = bounds / originalLineCount; $.writeln(lineHeight);
-            var newBounds = lineHeight * (split.length + 2); $.writeln(newBounds);
+            var lineHeight = bounds / originalLineCount; 
+            var newBounds = lineHeight * (split.length + 2); 
             layer.height = newBounds;
         }
     }
