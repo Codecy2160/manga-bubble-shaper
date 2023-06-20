@@ -1,4 +1,4 @@
-﻿#target photoshop;
+#target photoshop;
 
 function charCount(str) {
     if(str === undefined) return;
@@ -248,7 +248,7 @@ function shaper(array) {
                         }
                     }
                 }
-                else if(next + i + 2 > split.length) nextLine = splitCopy[next + i + 1];
+                else if(next + i + 2 > split.length) nextLine = split[-1];
                 if((nextLine !== "") && (charCount(split[next + 1]) > (extreme * 0.25))) {
                     if(((2.75 < (charCount(comparator) / charCount(nextLine))) || ((charCount(comparator) / charCount(nextLine)) < 0.75)) || (charCount(nextLine) <= (charCount(split[prev - i]) + 2))) {
                         break;
@@ -306,7 +306,7 @@ function shaper(array) {
                         }
                     }
                 }
-                else if(next + i + 2 > split.length) nextLine = splitCopy[next + i + 1];
+                else if(next + i + 2 > split.length) nextLine = split[-1];
                 if((nextLine !== "") && (charCount(split[prev - i]) > (extreme * 0.25))) {
                     if(((2.75 < (charCount(comparator) / charCount(nextLine))) || ((charCount(comparator) / charCount(nextLine)) < 0.75)) || (charCount(nextLine) <= (charCount(split[prev - i]) + 2))) {
                         break;
