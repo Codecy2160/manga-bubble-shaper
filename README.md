@@ -13,6 +13,11 @@ Please note that the script also adds extra whitespace to lines that end or star
 3. Run the Manga Bubble Shaper script via ```File > Scripts```.
 4. The script will automatically add line breaks to the selected text layer, shaping it into a baseline bubble shape.
 
+## Known Errors
+
+New Contents Out of Bounds Pop-Up
+- This may sometimes happen when using paragraph text but can be completely ignored.
+
 ## Limitations
 
 - The script is not a comprehensive solution for text shaping and may require manual adjustments.
