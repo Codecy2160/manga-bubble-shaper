@@ -1,4 +1,4 @@
-#target photoshop;
+﻿#target photoshop;
 
 function charCount(str) {
     if(str === undefined) return;
@@ -44,13 +44,15 @@ function shaper(array) {
         if(layer.kind === TextType.PARAGRAPHTEXT) {
             bounds = layer.height;
             var state = activeDocument.historyStates.length - 1;
-            activeDocument.activeLayer.name = "Kenzoku";
+            activeDocument.activeLayer.name = "Shaping…";
             layer.kind = TextType.POINTTEXT;
             originalLineCount = layer.contents.split("\r").length;
             try {
                 activeDocument.activeHistoryState = activeDocument.historyStates[state];
                 var parBreaks = layer.contents.indexOf("\r") !== -1 ? layer.contents.match(/[\r]/gmi).length : 0;
-                layer.contents = "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO";
+                var newContents = 0;
+                for(var i = 0; i < layer.contents.length; i++) newContents += "O"
+                layer.contents = newContents;
                 for(var i = 0; i <= parBreaks.length; i += 1) layer.contents += "\r O";
                 layer.kind = TextType.POINTTEXT;
                 var lines = layer.contents.split("\r");
