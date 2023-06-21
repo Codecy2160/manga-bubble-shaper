@@ -26,7 +26,7 @@ New Contents Out of Bounds Pop-Up
 
 ## Contributing
 
-Contributions to the Comic Lettering Baseline Tool are welcome! If you have any ideas, suggestions, or improvements, please feel free to contribute. You can fork the repository, make your changes, and submit a pull request.
+Contributions to the Manga Bubble Shaper are welcome! If you have any ideas, suggestions, or improvements, please feel free to contribute. You can fork the repository, make your changes, and submit a pull request.
 
 ## License
 
