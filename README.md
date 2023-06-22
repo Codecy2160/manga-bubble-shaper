@@ -31,3 +31,11 @@ Contributions to the Manga Bubble Shaper are welcome! If you have any ideas, sug
 ## License
 
 This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute the script in accordance with the terms of the license.
+
+## Changlog
+
+# 1.00
+- Initial release.
+
+# 1.10 
+- Can now process multiple selected layers.
