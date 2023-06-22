@@ -9,12 +9,13 @@ function charCount(str) {
     return raw.length + (puncHalf.length * 0.5) + puncFull.length + (noXBar.length * 0.5);
 }
 
-function shaper(array) {
+function shaper(layer, array) {
     var split = array;
     var totalLen = 0;
     var extreme = 0;
     for(var i = 0; i < split.length; i++) if(split[i].length > extreme) extreme = split[i].length;
     for(var i = 0; i < split.length; i += 1) totalLen += split[i].length;
+    var wordCount = array.length;
     var mean = totalLen / wordCount;
     var median = (split.length % 2) === 0 ? 0 : Math.floor(split.length / 2);
     var next = median > 0 ? median + 1 : split.length / 2;
@@ -75,7 +76,7 @@ function shaper(array) {
         while(true) {
             if((charCount(split[prev]) + charCount(split[median]) + charCount(split[next])) <= extreme) {
                 var nextLine = "";
-                var splitCopy = [];
+                var splitCopy = [ ];
                 for(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);
                 var comparator = split[next] + " " + split[next + 1];
                 if((next + 1) <= (splitCopy.length - 1)) {
@@ -97,7 +98,7 @@ function shaper(array) {
                     }
                 }
                 nextLine = "";
-                splitCopy = [];
+                splitCopy = [ ];
                 for(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);
                 comparator = split[prev - 1] + " " + split[prev];
                 if((prev - 1) >= 0) {
@@ -132,7 +133,7 @@ function shaper(array) {
                 next--;
             } else if((((charCount(split[median]) + charCount(split[next])) <= extreme) && ((charCount(split[prev]) + charCount(split[median])) <= extreme)) && ((charCount(split[prev]) + charCount(split[prev - 1])) > extreme)) {
                 var nextLine = "";
-                var splitCopy = [];
+                var splitCopy = [ ];
                 for(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);
                 var comparator = split[prev - 1] + " " + split[prev];
                 if((prev - 2) >= 0) {
@@ -165,7 +166,7 @@ function shaper(array) {
                 next--;
             } else if((charCount(split[median]) + charCount(split[next])) <= extreme) {
                 var nextLine = "";
-                var splitCopy = [];
+                var splitCopy = [ ];
                 for(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);
                 var comparator = split[next] + " " + split[next + 1];
                 if((next + 1) <= (split.length - 1)) {
@@ -190,7 +191,7 @@ function shaper(array) {
                 split.splice(next, 1);
             } else if((charCount(split[prev]) + charCount(split[median])) <= extreme) {
                 var nextLine = "";
-                var splitCopy = [];
+                var splitCopy = [ ];
                 for(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);
                 var comparator = split[prev - 1] + " " + split[prev];
                 if((prev - 2) >= 0) {
@@ -234,7 +235,7 @@ function shaper(array) {
         while(true) {
             if(((next + i + 1) <= (split.length - 1)) && ((charCount(split[next + i]) + charCount(split[next + i + 1])) <= nextExtreme)) {
                 var nextLine = "";
-                var splitCopy = [];
+                var splitCopy = [ ];
                 for(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);
                 var comparator = split[next + i] + " " + split[next + i + 1];
                 if(((next + i + 2) <= split.length) && (i > 0)) {
@@ -291,7 +292,7 @@ function shaper(array) {
         while(true) {
             if((((prev - i) - 1) >= 0) && ((charCount(split[prev - i]) + charCount(split[(prev - i) - 1])) <= prevExtreme)) {
                 var nextLine = "";
-                var splitCopy = [];
+                var splitCopy = [ ];
                 for(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);
                 var comparator = split[(prev - i) - 1] + " " + split[prev - i];
                 if((((prev - i) - 2) >= 0) && (i > 0)) {
@@ -404,6 +405,37 @@ function shaper(array) {
     }
     return split.join('\r');
 }
+
+function getSelectedLayers() {
+    var selectedLayers = [ ];
+    var desc = new ActionDescriptor();
+    var ref = new ActionReference();
+    ref.putClass(stringIDToTypeID('layerSection'));
+    desc.putReference(charIDToTypeID('null'), ref);
+    var layerRef = new ActionReference();
+    layerRef.putEnumerated(charIDToTypeID('Lyr '), charIDToTypeID('Ordn'), charIDToTypeID('Trgt'));
+    desc.putReference(charIDToTypeID('From'), layerRef);
+    executeAction(charIDToTypeID('Mk  '), desc, DialogModes.NO);
+    var tempLayerSet = app.activeDocument.activeLayer.layers;
+    for(var i = 0; i < tempLayerSet.length; i++) selectedLayers.push(tempLayerSet[i]);
+    executeAction(charIDToTypeID('undo'), undefined, DialogModes.NO);
+    return selectedLayers;
+};
+
+function main() {    
+    var selectedLayers = getSelectedLayers();
+    for(var i = 0; i < selectedLayers.length; i++) {
+        alert(selectedLayers[i].kind);
+        if(selectedLayers[i].kind === LayerKind.TEXT) {
+            var layer = selectedLayers[i].textItem;
+            var text = layer.contents.replace(/[^\S\n\r]+$/gmi, ' ');
+            var toArray = text.split(/\s/);
+            layer.contents = shaper(layer, toArray);
+        }
+        else continue;
+    }
+}
+
 String.prototype.endsWith = (function(str) {
     return this.substring(this.length - str.length, this.length) === str;
 });
@@ -411,8 +443,4 @@ String.prototype.startsWith = (function(str) {
     return this.substring(0, this.length) === str;
 });
 app.preferences.rulerUnits = Units.PIXELS;
-var layer = app.activeDocument.activeLayer.textItem;
-var text = layer.contents.replace(/[^\S\n\r]+$/gmi, " ");
-var toArray = text.split(/\s/);
-var wordCount = toArray.length;
-layer.contents = shaper(toArray);
+main();
