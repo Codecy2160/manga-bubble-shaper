@@ -34,8 +34,8 @@ This project is licensed under the [MIT License](LICENSE). You are free to use, 
 
 ## Changlog
 
-# 1.00
+### 1.00
 - Initial release.
 
-# 1.10 
+### 1.10 
 - Can now process multiple selected layers.
