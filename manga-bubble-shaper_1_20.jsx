@@ -27,8 +27,11 @@ function shaper(layer, array) {
     else if(wordCount === 2) return array.join('\r');
     else if(wordCount === 3) {
         var longestIdx = 0;
+        var mediumIdx = 0;
         for(var i = 0; i < 3; i++) if(split[i].length > longestIdx) longestIdx = i;
-        if(longestIdx === 1) return split.join('\r');
+        for(var i = 0; i < 3; i++) if(split[i].length > mediumIdx && i != longestIdx) mediumIdx = i;
+        if(charCount(split[mediumIdx]) / charCount(longestIdx) >= 0.6 || 
+           longestIdx === 1) return split.join('\r');
         else if(longestIdx === 0) {
             split[1] += " " + split[2];
             split.splice(2, 1);
@@ -89,7 +92,6 @@ function shaper(layer, array) {
         }
     }
     for(var i = 0; i < split.length; i++) if(split[i].length > extreme) extreme = split[i].length;
-    alert("'Source: " + array.join('') + "'" + "\rMedian: " + split[median] + "\rWord Count: " + wordCount + "\rExtreme: " + extreme);
     if((singleMedian) && (split[median] !== undefined)) {
         while(true) {
             if((charCount(split[prev]) + charCount(split[median]) + charCount(split[next])) <= extreme) {
@@ -200,7 +202,6 @@ function shaper(layer, array) {
                 var splitCopy = [ ];
                 for(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);
                 var comparator = split[next] + " " + split[next + 1];
-                alert(charCount(split[next + 1]) > (extreme * 0.25 ));
                 if((next + 1) <= (split.length - 1)) {
                     while(true) {
                         var mockNext = next;
@@ -213,7 +214,7 @@ function shaper(layer, array) {
                             break;
                         }
                     }
-                } alert((charCount(comparator) / charCount(split[next + i])) + '\r' + comparator + '\r' + split[next + i]) + '\r' + i;
+                }                 
                 if((nextLine !== "") && (charCount(split[next + 1]) > (extreme * 0.25))) {
                     if(((2.75 < (charCount(comparator) / charCount(nextLine))) || 
                       ((charCount(comparator) / charCount(nextLine)) < 0.75)) || 
@@ -278,7 +279,6 @@ function shaper(layer, array) {
                 var splitCopy = [ ];
                 for(var j = 0; j < split.length; j += 1) splitCopy.push(split[j]);
                 var comparator = split[next + i] + " " + split[next + i + 1];
-                alert(split[next + i]);
                 if(((next + i + 2) <= split.length) && (i > 0)) {
                     while(true) {
                         var mockNext = next;
