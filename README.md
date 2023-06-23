@@ -39,3 +39,8 @@ This project is licensed under the [MIT License](LICENSE). You are free to use, 
 
 ### 1.10 
 - Can now process multiple selected layers.
+
+### 1.20
+- Fixed variable scope issues.
+- Will no longer leave stranded single short words on their own line.
+- Added rulesets for text that are only two or three words long.
