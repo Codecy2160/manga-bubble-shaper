@@ -4,6 +4,8 @@
 
 The Manga Bubble Shaper is a script designed to aid the comic lettering process in Adobe Photoshop and Indesign. Its main goal is to set a baseline bubble shape to text by adding line breaks (`\n`) to the current selected text layer in Photoshop and Indesign. The script should not be treated as a be-all end-all solution for text shaping but rather as a guide.
 
+![](https://github.com/Codecy2160/manga-bubble-shaper/blob/master/demo.gif)
+
 Please note that the script also adds extra whitespace to lines that end or start with an ellipsis.
 
 ## Usage
