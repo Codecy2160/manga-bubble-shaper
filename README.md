@@ -51,3 +51,6 @@ This project is licensed under the [MIT License](LICENSE). You are free to use, 
 - Fixed variable scope issues.
 - Will no longer leave stranded single short words on their own line.
 - Added rulesets for text that are only two or three words long.
+
+#### 1.21
+- Fixed a syntax error caused by text that are only three-words long.
