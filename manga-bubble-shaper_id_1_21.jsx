@@ -26,7 +26,7 @@ function shaper(layer, array) {
         var mediumIdx = 0;
         for(var i = 0; i < 3; i++) if(split[i].length > longestIdx) longestIdx = i;
         for(var i = 0; i < 3; i++) if(split[i].length > mediumIdx && i != longestIdx) mediumIdx = i;
-        if(charCount(split[mediumIdx]) / charCount(longestIdx) >= 0.6 || 
+        if(charCount(split[mediumIdx]) / longestIdx >= 0.6 || 
            longestIdx === 1) return split.join('\r');
         else if(longestIdx === 0) {
             split[1] += " " + split[2];
